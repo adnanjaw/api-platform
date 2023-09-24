@@ -26,7 +26,7 @@ services:
       OPCACHE_FAST_SHUTDOWN: ${OPCACHE_FAST_SHUTDOWN}
       OPCACHE_PRELOAD: ${OPCACHE_PRELOAD}
     volumes:
-      - ./api:/api
+      - .:/api
     networks:
       - api
 
@@ -40,7 +40,7 @@ services:
       - no-new-privileges:true
     <<: [*restart-always]
     volumes:
-      - ./api:/api
+      - .:/api
     labels:
       traefik.enable: true
       traefik.docker.network: proxy
@@ -92,7 +92,7 @@ services:
       - dev
     restart: "no"
     volumes:
-      - ./api:/api
+      - .:/api
     depends_on:
       - phpfpm
 

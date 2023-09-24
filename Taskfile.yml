@@ -44,7 +44,7 @@ tasks:
   phpcs:
     desc: PHPCS dry run
     cmds:
-      - docker compose run --rm --no-deps$TTY phpfpm vendor/bin/php-cs-fixer fix --dry-run -v --diff
+      - docker compose run --rm --no-deps $TTY phpfpm vendor/bin/php-cs-fixer fix --dry-run -v --diff
 
   phpcs:fix:
     desc: PHPCS fix
