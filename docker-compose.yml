@@ -1,0 +1,119 @@
+version: '3.9'
+
+x-restart-always: &restart-always
+  restart: always
+
+services:
+  phpfpm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: local
+      args:
+        UID: ${UID:-10000}
+        GID: ${GID:-10001}
+    user: "${UID:-10000}:${GID:-10001}"
+    <<: [ *restart-always ]
+    environment:
+      PHP_OPCACHE_ENABLE: ${OPCACHE_ENABLE}
+      OPCACHE_ENABLE_CLI: ${OPCACHE_ENABLE_CLI}
+      OPCACHE_ENABLE_FREQ: ${OPCACHE_ENABLE_FREQ}
+      OPCACHE_VALIDATE_TIMESTAMPS: ${OPCACHE_VALIDATE_TIMESTAMPS}
+      OPCACHE_MAX_ACCELERATED_FILES: ${OPCACHE_MAX_ACCELERATED_FILES}
+      OPCACHE_MEMORY_CONSUMPTION: ${OPCACHE_MEMORY_CONSUMPTION}
+      OPCACHE_MAX_WASTED_PERCENTAGE: ${OPCACHE_MAX_WASTED_PERCENTAGE}
+      OPCACHE_INTERNED_STRINGS_BUFFER: ${OPCACHE_INTERNED_STRINGS_BUFFER}
+      OPCACHE_FAST_SHUTDOWN: ${OPCACHE_FAST_SHUTDOWN}
+      OPCACHE_PRELOAD: ${OPCACHE_PRELOAD}
+    volumes:
+      - ./api:/api
+    networks:
+      - api
+
+  nginx:
+    build:
+      context: .docker/nginx
+      dockerfile: Dockerfile
+      args:
+        NGINX_IMAGE_VERSION: ${NGINX_IMAGE_VERSION}
+    security_opt:
+      - no-new-privileges:true
+    <<: [*restart-always]
+    volumes:
+      - ./api:/api
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy
+      traefik.http.routers.api-nginx.priority: 100
+      traefik.http.routers.api-nginx.tls: true
+      traefik.http.routers.api-nginx.entrypoints: https
+      traefik.http.routers.api-nginx.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.api-nginx.service: api-nginx
+      traefik.http.services.api-nginx.loadbalancer.server.port: 80
+    networks:
+      - api
+      - proxy
+
+  mysql:
+    build:
+      context: .docker/mysql
+      dockerfile: Dockerfile
+      args:
+        MYSQL_IMAGE_VERSION: ${MYSQL_IMAGE_VERSION}
+    cap_add:
+      - SYS_NICE
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      options:
+        max-size: "50m"
+        max-file: "5"
+    ports:
+      - "3307:3306"
+    <<: [*restart-always]
+    environment:
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_log:/var/log/mysql
+      - ~/db-init/mysql/api:/docker-entrypoint-initdb.d
+    networks:
+      - api
+
+  node:
+    image: timbru31/node-alpine-git:${NODE_IMAGE_VERSION}
+    working_dir: /api
+    security_opt:
+      - no-new-privileges:true
+    profiles:
+      - dev
+    restart: "no"
+    volumes:
+      - ./api:/api
+    depends_on:
+      - phpfpm
+
+  wait:
+    image: waisbrot/wait
+    environment:
+      TARGETS: mysql:3306 nginx:80
+      TIMEOUT: 300
+    networks:
+      - api
+
+volumes:
+  mysql_data:
+    driver: local
+  mysql_log:
+    driver: local
+  apache_log:
+    driver: local
+
+networks:
+  api:
+    driver: bridge
+  proxy:
+    external: true
