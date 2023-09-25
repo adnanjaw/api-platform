@@ -15,6 +15,7 @@ Before you begin, make sure you have the following prerequisites:
 - Docker (for local development)
 - Docker compose (for local development)
 - Taskfile.dev
+- Traefik (https://doc.traefik.io/traefik)
 
 Follow these steps to set up your development environment:
 
