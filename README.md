@@ -1,6 +1,6 @@
 # API-Platform Template
 
-<div style="text-align:center">
+<div align="center">
   <img src="https://api-platform.com/images/super-webby.svg" alt="API-Platform Logo" width="350" height="350">
 </div>
 
