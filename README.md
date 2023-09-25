@@ -127,3 +127,7 @@ If you'd like to contribute to this project, please follow the standard GitHub f
 ## License
 
 This template is open-source and available under the [MIT License](LICENSE).
+
+## Special Thanks
+We would like to express our gratitude to the following individuals for their invaluable contributions, support:
+- **ToshY** for providing the main building block in [ToshY/symfony-docker](https://github.com/ToshY/symfony-docker) 
