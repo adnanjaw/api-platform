@@ -29,5 +29,5 @@ jobs:
         run: echo ${{ steps.security-check.outputs.vulns }}
 
       - name: Fail if vulnerabilities found
-        if: steps.security-check.outputs.vulns != ''
+        if: '${{ steps.security-check.outputs.vulns }}' != ''
         run: exit 1
