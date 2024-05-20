@@ -17,13 +17,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check for vulnerabilities
         uses: symfonycorp/security-checker-action@v5
         with:
-          disable-exit-code: 1
+          disable-exit-code: 0 # Changed to 0 to fail the job if vulnerabilities are found
         id: security-check
 
       - name: Display vulnerabilities as JSON
         run: echo ${{ steps.security-check.outputs.vulns }}
+
+      - name: Fail if vulnerabilities found
+        if: steps.security-check.outputs.vulns != ''
+        run: exit 1

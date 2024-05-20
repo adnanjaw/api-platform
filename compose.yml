@@ -1,5 +1,3 @@
-version: '3.9'
-
 x-restart-always: &restart-always
   restart: always
 
@@ -12,6 +10,7 @@ services:
       args:
         UID: ${UID:-10000}
         GID: ${GID:-10001}
+        PHP_IMAGE_VERSION: ${PHP_IMAGE_VERSION-8.3}
     user: "${UID:-10000}:${GID:-10001}"
     <<: [ *restart-always ]
     environment:
@@ -44,12 +43,11 @@ services:
     labels:
       traefik.enable: true
       traefik.docker.network: proxy
-      traefik.http.routers.api-nginx.priority: 100
-      traefik.http.routers.api-nginx.tls: true
-      traefik.http.routers.api-nginx.entrypoints: https
-      traefik.http.routers.api-nginx.rule: Host(`${APP_DOMAIN}`)
-      traefik.http.routers.api-nginx.service: api-nginx
-      traefik.http.services.api-nginx.loadbalancer.server.port: 80
+      traefik.http.routers.api-template.tls: true
+      traefik.http.routers.api-template.entrypoints: https
+      traefik.http.routers.api-template.rule: Host(`${APP_DOMAIN}`)
+      traefik.http.routers.api-template.service: api-template
+      traefik.http.services.api-template.loadbalancer.server.port: 80
     networks:
       - api
       - proxy
@@ -108,8 +106,6 @@ volumes:
   mysql_data:
     driver: local
   mysql_log:
-    driver: local
-  apache_log:
     driver: local
 
 networks:

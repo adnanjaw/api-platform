@@ -1,4 +1,5 @@
-name: PHPUnit
+name: PHPUnit Tests
+
 on:
   push:
     branches:
@@ -9,25 +10,42 @@ on:
 
 jobs:
   phpunit:
-    name: PHPUnit
+    name: Run PHPUnit
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions:
-          - '8.1'
-          - '8.2'
+        php-versions: ['8.1', '8.2', '8.3']
+        operating-system: [ubuntu-latest]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@3
         with:
           php-version: ${{ matrix.php-versions }}
 
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: PHPUnit
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+
+      - name: Run PHPUnit tests
         run: php vendor/bin/phpunit
+
+      - name: Upload PHPUnit test results
+        if: failure()
+        uses: actions/upload-artifact@v4.3.2
+        with:
+          name: phpunit-results
+          path: ./tests/_output/*.xml

@@ -1,8 +1,8 @@
 ARG PHP_IMAGE_VERSION
 
-FROM php:${PHP_IMAGE_VERSION:-"8.1"}-fpm-buster
+FROM php:fpm-bookworm as base
 
-LABEL maintainer="Adnan Al Jawabra (github.com/adnanjaw)"
+LABEL maintainer="Adnan Al Jawabra"
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 

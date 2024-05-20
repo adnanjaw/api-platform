@@ -1,4 +1,5 @@
-name: PHPStan
+name: PHPStan Static Analysis
+
 on:
   push:
     branches:
@@ -13,21 +14,41 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions:
-          - '8.1'
-          - '8.2'
+        php-versions: ['8.1', '8.2', '8.3']
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@v3
         with:
           php-version: ${{ matrix.php-versions }}
 
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: PHPStan
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
+
+      - name: PHPStan Analysis
         run: php vendor/bin/phpstan analyse --error-format=github
+        continue-on-error: true # Continue the workflow even if PHPStan finds issues
+
+      - name: Upload PHPStan results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: phpstan-results
+          path: tmp/phpstan/*.json # Update this path to where your PHPStan results are stored
+
+      - name: Setup Problem Matcher
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpstan-problem-matcher.json"

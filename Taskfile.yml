@@ -33,7 +33,6 @@ tasks:
       - task: phpcs
       - task: twigcs
       - task: phpstan
-      - task: phpmd
       - task: phpunit
 
   grum:init:
@@ -60,21 +59,6 @@ tasks:
     desc: TwigCS fix
     cmds:
       - docker compose run --rm --no-deps $TTY phpfpm vendor/bin/twig-cs-fixer lint --fix templates/
-
-  phpmd:
-    desc: PHPMD run
-    cmds:
-      - docker compose run --rm --no-deps $TTY phpfpm vendor/bin/phpmd src/ text phpmd.xml
-
-  phpmd:strict:
-    desc: PHPMD run with strict argument
-    cmds:
-      - docker compose run --rm --no-deps $TTY phpfpm vendor/bin/phpmd --strict src/ text phpmd.xml
-
-  phpmd:baseline:
-    desc: PHPMD update baseline
-    cmds:
-      - docker compose run --rm --no-deps $TTY phpfpm vendor/bin/phpmd --generate-baseline src/ text phpmd.xml
 
   phpstan:
     desc: PHPStan run

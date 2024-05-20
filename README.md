@@ -74,24 +74,6 @@ This template includes a Taskfile that simplifies common development tasks. You 
   task twigcs:fix
   ```
 
-- **Run PHP Mess Detector**:
-
-  ```bash
-  task phpmd
-  ```
-
-- **Run PHP Mess Detector with Strict Mode**:
-
-  ```bash
-  task phpmd:strict
-  ```
-
-- **Update PHP Mess Detector Baseline**:
-
-  ```bash
-  task phpmd:baseline
-  ```
-
 - **Run PHPStan for Static Analysis**:
 
   ```bash
