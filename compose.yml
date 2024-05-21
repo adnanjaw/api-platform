@@ -4,9 +4,9 @@ x-restart-always: &restart-always
 services:
   phpfpm:
     build:
-      context: .
+      context: .docker/php
       dockerfile: Dockerfile
-      target: local
+      target: dev
       args:
         UID: ${UID:-10000}
         GID: ${GID:-10001}
