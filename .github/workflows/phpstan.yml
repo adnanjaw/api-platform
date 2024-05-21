@@ -1,54 +1,58 @@
-name: PHPStan Static Analysis
+name: PHPStan Analysis
 
 on:
   push:
-    branches:
-      - master
+    branches: ["master"]
+    paths:
+      - '.github/reporting.yml'
+      - '**.php'
   pull_request:
-    branches:
-      - master
+    branches: ["master"]
+    paths:
+      - '.github/reporting.yml'
+      - '**.php'
+
+permissions:
+  contents: write
 
 jobs:
   phpstan:
-    name: PHPStan
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-versions: ['8.1', '8.2', '8.3']
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@2.30.4
-        with:
-          php-version: ${{ matrix.php-versions }}
-
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
       - name: Cache Composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: ${{ runner.os }}-composer-
+          path: ./vendor
+          key: composer-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@v3
+      - name: Composer Init
+        uses: php-actions/composer@v6
+        with:
+          php_version: "8.3"
+          php_extensions: soap intl gd
 
       - name: PHPStan Analysis
-        run: php vendor/bin/phpstan analyse --error-format=github
-        continue-on-error: true # Continue the workflow even if PHPStan finds issues
+        run: |
+          ./vendor/bin/phpstan analyse --configuration=phpstan.neon --memory-limit=1024M --error-format=md --no-progress >> 'Static Analysis.md'
 
-      - name: Upload PHPStan results
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Wiki checkout
+        uses: actions/checkout@v4
         with:
-          name: phpstan-results
-          path: tmp/phpstan/*.json # Update this path to where your PHPStan results are stored
+          repository: ${{github.repository}}.wiki
+          path: 'wiki'
 
-      - name: Setup Problem Matcher
-        run: echo "::add-matcher::${{ runner.tool_cache }}/phpstan-problem-matcher.json"
+      - name: Push
+        run: |
+          mv Coverage.md wiki
+          mv 'Static Analysis.md' wiki
+          cd wiki
+          ls -la
+          git config user.name actions-runner
+          git config user.email actions-runner@github.com
+          git add .
+          git commit -m "Add Coverage and Analysis files" 
+          git push
