@@ -5934,16 +5934,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v6.3.12",
+            "version": "v6.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "8ab9bb61e9b862c9b481af745ff163bc5e5e6246"
+                "reference": "52903de178d542850f6f341ba92995d3d63e60c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/8ab9bb61e9b862c9b481af745ff163bc5e5e6246",
-                "reference": "8ab9bb61e9b862c9b481af745ff163bc5e5e6246",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/52903de178d542850f6f341ba92995d3d63e60c9",
+                "reference": "52903de178d542850f6f341ba92995d3d63e60c9",
                 "shasum": ""
             },
             "require": {
@@ -5955,7 +5955,7 @@
                 "symfony/console": "<5.4"
             },
             "require-dev": {
-                "symfony/console": "^5.4|^6.0"
+                "symfony/console": "^5.4|^6.0|^7.0"
             },
             "bin": [
                 "Resources/bin/yaml-lint"
@@ -5986,7 +5986,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v6.3.12"
+                "source": "https://github.com/symfony/yaml/tree/v6.4.8"
             },
             "funding": [
                 {
@@ -6002,7 +6002,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-23T14:35:58+00:00"
+            "time": "2024-05-31T14:49:08+00:00"
         },
         {
             "name": "twig/twig",
