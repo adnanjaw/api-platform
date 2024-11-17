@@ -37,7 +37,7 @@
     "roave/security-advisories": "dev-latest",
     "api-platform/schema-generator": "^5.0",
     "phpro/grumphp": "^2.0",
-    "phpstan/phpstan": "^1.11",
+    "phpstan/phpstan": "^2.0",
     "phpunit/phpunit": "^10.5",
     "vincentlanglet/twig-cs-fixer": "^2.10",
     "friendsofphp/php-cs-fixer": "^3.13",
