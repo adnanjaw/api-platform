@@ -34,7 +34,6 @@
     "symfony/yaml": "6.4.*"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
     "api-platform/schema-generator": "^5.0",
     "phpro/grumphp": "^2.10",
     "phpstan/phpstan": "^1.11",
