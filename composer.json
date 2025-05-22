@@ -38,8 +38,7 @@
     "symfony/twig-bundle": "6.4.*",
     "symfony/uid": "6.4.*",
     "symfony/validator": "6.4.*",
-    "symfony/yaml": "6.4.*",
-    "symfony/mercure-bundle": "^0.3.9"
+    "symfony/yaml": "6.4.*"
   },
   "require-dev": {
     "api-platform/schema-generator": "^5.0",
