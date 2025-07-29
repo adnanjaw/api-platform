@@ -2,6 +2,7 @@ version: 2
 
 updates:
   - package-ecosystem: github-actions
+    directory: "/"
     schedule:
       interval: daily
       time: "21:00"
@@ -11,6 +12,7 @@ updates:
       - "github-actions"
 
   - package-ecosystem: "composer"
+    directory: "/"
     target-branch: "master"
     schedule:
       interval: "weekly"
