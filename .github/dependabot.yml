@@ -1,33 +1,16 @@
 version: 2
 
 updates:
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule:
-      interval: daily
-      time: "21:00"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "github-actions"
-
-  - package-ecosystem: "composer"
+  - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "master"
     schedule:
       interval: "weekly"
       day: "sunday"
-    versioning-strategy: "increase"
-    ignore:
-      - dependency-name: "symfony/*"
-        update-types:
-          - version-update:semver-major
-          - version-update:semver-minor
-    groups:
-      symfony:
-        patterns:
-          - "symfony/*"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "php"
+
+  - package-ecosystem: "master"
+    directory: "/"
+    target-branch: "main"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
