@@ -41,7 +41,7 @@
     "symfony/yaml": "6.4.*"
   },
   "require-dev": {
-    "api-platform/schema-generator": "^5.0",
+    "api-platform/schema-generator": "^5.2",
     "phpro/grumphp": "^2.10",
     "phpstan/phpstan": "^1.11",
     "phpunit/phpunit": "^10.5",
